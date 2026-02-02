@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Singer Website Content Schemas",
+  "description": "JSON Schema definitions for all content files in the singer portfolio website",
+  "definitions": {
+    "Profile": {
+      "type": "object",
+      "required": ["name", "tagline", "biography", "heroImage"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Artist's display name"
+        },
+        "tagline": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 100,
+          "description": "Short genre/style descriptor"
+        },
+        "biography": {
+          "type": "string",
+          "minLength": 100,
+          "maxLength": 2000,
+          "description": "Full artist bio (can include \\n for paragraphs)"
+        },
+        "heroImage": {
+          "type": "string",
+          "pattern": "^/images/.*\\.(jpg|jpeg|png|webp)$",
+          "description": "Path to hero image"
+        },
+        "profileImage": {
+          "type": "string",
+          "pattern": "^/images/.*\\.(jpg|jpeg|png|webp)$",
+          "description": "Alternative profile photo"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email for booking"
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+?[1-9]\\d{1,14}$",
+          "description": "Contact phone number in E.164 format"
+        }
+      }
+    },
+    "MediaItem": {
+      "type": "object",
+      "required": ["id", "type", "title", "url", "order"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{3,50}$",
+          "description": "Unique identifier in kebab-case"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["spotify", "youtube", "appleMusic", "audio"],
+          "description": "Platform type"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Song/album/video title"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Short description"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Platform URL or file path"
+        },
+        "embedUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Embed-specific URL"
+        },
+        "releaseDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Release date in YYYY-MM-DD format"
+        },
+        "artwork": {
+          "type": "string",
+          "pattern": "^/images/.*\\.(jpg|jpeg|png|webp)$",
+          "description": "Path to album art/thumbnail"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Display order (ascending)"
+        }
+      }
+    },
+    "GalleryImage": {
+      "type": "object",
+      "required": ["id", "src", "alt", "order"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{3,50}$",
+          "description": "Unique identifier in kebab-case"
+        },
+        "src": {
+          "type": "string",
+          "pattern": "^/images/.*\\.(jpg|jpeg|png|webp)$",
+          "description": "Path to image"
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200,
+          "description": "Accessible alt text (WCAG requirement)"
+        },
+        "caption": {
+          "type": "string",
+          "maxLength": 150,
+          "description": "Visible caption"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["performance", "studio", "press", "candid"],
+          "description": "Image category"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Date in YYYY-MM-DD format"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Display order (ascending)"
+        },
+        "blurDataURL": {
+          "type": "string",
+          "pattern": "^data:image/(jpeg|png);base64,",
+          "description": "Base64 blur placeholder"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "required": ["id", "title", "venue", "city", "country", "date", "status", "order"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{3,50}$",
+          "description": "Unique identifier in kebab-case"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 100,
+          "description": "Event/venue name"
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Venue name"
+        },
+        "city": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 50,
+          "description": "City name"
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "State/province code (2 letters)"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Country code (ISO 3166-1 alpha-2)"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Event date in YYYY-MM-DD format"
+        },
+        "time": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "description": "Performance time in 24h format (HH:MM)"
+        },
+        "ticketUrl": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Link to ticket purchase page"
+        },
+        "ticketVendor": {
+          "type": ["string", "null"],
+          "maxLength": 50,
+          "description": "Vendor name"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["upcoming", "soldOut", "cancelled", "past"],
+          "description": "Event status"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Display order (ascending by date recommended)"
+        }
+      }
+    },
+    "SocialLink": {
+      "type": "object",
+      "required": ["id", "platform", "label", "url", "order"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{3,30}$",
+          "description": "Unique identifier in kebab-case"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["instagram", "twitter", "facebook", "youtube", "tiktok", "spotify", "appleMusic"],
+          "description": "Social media platform"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 50,
+          "description": "Display name"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "Full profile URL (must be https)"
+        },
+        "icon": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "Icon identifier for icon library"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Display order (ascending)"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "profile": {
+      "$ref": "#/definitions/Profile",
+      "description": "File: src/data/profile.json"
+    },
+    "music": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MediaItem"
+      },
+      "description": "File: src/data/music.json"
+    },
+    "gallery": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GalleryImage"
+      },
+      "description": "File: src/data/gallery.json"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Event"
+      },
+      "description": "File: src/data/events.json"
+    },
+    "social": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SocialLink"
+      },
+      "description": "File: src/data/social.json"
+    }
+  }
+}
