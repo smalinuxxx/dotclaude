@@ -1,0 +1,14 @@
+procs:
+  git:
+    cmd: ["./yolo.sh"]
+  clean:
+    cmd: ["./yolo.sh"]
+  security:
+    cmd: ["./yolo.sh"]
+  server:
+    shell: "nodemon server.js"
+  webpack: "webpack serve"
+  tests:
+    shell: "jest -w"
+    env:
+      NODE_ENV: test
