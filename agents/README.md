@@ -71,7 +71,7 @@ See `custom_subagents.md` in repo root for complete documentation.
 ## References
 
 - [Claude Code Subagents Documentation](https://code.claude.com/docs/custom-subagents)
-- [Custom Subagents Cheatsheet](../custom_subagents.md) - Full configuration reference
+- [Custom Subagents Cheatsheet](custom_subagents.md) - Full configuration reference
 - [Claude Code Skills](https://code.claude.com/docs/skills) - Alternative to subagents
 - [Hooks Documentation](https://code.claude.com/docs/hooks) - Lifecycle event handlers
 
