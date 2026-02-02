@@ -1,0 +1,524 @@
+# Data Model: Singer Portfolio Website
+**Feature**: 001-singer-website
+**Date**: 2026-02-02
+**Status**: Complete
+
+## Overview
+
+This document defines the content structure for the static JSON/Markdown files used by the Next.js singer portfolio website. All content is stored in `/src/data/` and loaded at build time for static site generation.
+
+---
+
+## Entity Definitions
+
+### 1. Singer Profile
+
+**File**: `src/data/profile.json`
+
+**Purpose**: Core artist information displayed in hero and about sections
+
+**Attributes**:
+- `name` (string, required): Artist's display name
+- `tagline` (string, required): Short genre/style descriptor (displayed in hero)
+- `biography` (string, required): Full artist bio (multiple paragraphs supported)
+- `heroImage` (string, required): Path to hero image (relative to `/public/images/`)
+- `profileImage` (string, optional): Alternative profile photo for about section
+- `email` (string, optional): Contact email for booking
+- `phone` (string, optional): Contact phone number
+
+**Example**:
+```json
+{
+  "name": "Sarah Johnson",
+  "tagline": "Jazz Vocalist & Songwriter",
+  "biography": "Sarah Johnson is an award-winning jazz vocalist with over 15 years of performance experience. Her unique blend of traditional jazz standards and contemporary compositions has captivated audiences worldwide.\n\nBased in New York City, Sarah has performed at prestigious venues including Carnegie Hall, Blue Note Jazz Club, and the Montreal Jazz Festival.",
+  "heroImage": "/images/hero/sarah-hero.jpg",
+  "profileImage": "/images/about/sarah-profile.jpg",
+  "email": "booking@sarahjohnsonmusic.com",
+  "phone": "+1 (555) 123-4567"
+}
+```
+
+**Validation Rules**:
+- `name`: 1-100 characters
+- `tagline`: 10-100 characters (concise genre description)
+- `biography`: 100-2000 characters (can include `\n` for paragraphs)
+- `heroImage`: Valid path to existing image file
+- `email`: Valid email format
+- `phone`: Valid international phone format (optional)
+
+---
+
+### 2. Media Item
+
+**File**: `src/data/music.json` (array of media items)
+
+**Purpose**: Streaming platform links and embedded media players
+
+**Attributes**:
+- `id` (string, required): Unique identifier (e.g., "single-moonlight")
+- `type` (enum, required): "spotify" | "youtube" | "appleMusic" | "audio"
+- `title` (string, required): Song/album/video title
+- `description` (string, optional): Short description
+- `url` (string, required): Platform URL or file path
+- `embedUrl` (string, optional): Embed-specific URL (if different from url)
+- `releaseDate` (string, optional): ISO 8601 date (YYYY-MM-DD)
+- `artwork` (string, optional): Path to album art/thumbnail
+- `order` (number, required): Display order (ascending)
+
+**Example**:
+```json
+[
+  {
+    "id": "single-moonlight",
+    "type": "spotify",
+    "title": "Moonlight",
+    "description": "Latest single from the upcoming album",
+    "url": "https://open.spotify.com/track/1KFxcj3MZrpJijNLZXN2pz",
+    "embedUrl": "https://open.spotify.com/embed/track/1KFxcj3MZrpJijNLZXN2pz",
+    "releaseDate": "2026-01-15",
+    "artwork": "/images/music/moonlight-cover.jpg",
+    "order": 1
+  },
+  {
+    "id": "video-live-carnegie",
+    "type": "youtube",
+    "title": "Live at Carnegie Hall",
+    "description": "Full concert recording from 2025 tour",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "releaseDate": "2025-11-20",
+    "artwork": "/images/music/carnegie-thumbnail.jpg",
+    "order": 2
+  },
+  {
+    "id": "album-debut",
+    "type": "appleMusic",
+    "title": "Midnight Dreams - Debut Album",
+    "url": "https://music.apple.com/us/album/midnight-dreams/...",
+    "embedUrl": "https://embed.music.apple.com/us/album/...",
+    "releaseDate": "2025-06-01",
+    "artwork": "/images/music/midnight-dreams-cover.jpg",
+    "order": 3
+  }
+]
+```
+
+**Validation Rules**:
+- `id`: Unique, kebab-case, 3-50 characters
+- `type`: Must be one of the four supported types
+- `title`: 1-100 characters
+- `description`: 0-300 characters
+- `url`: Valid URL or file path
+- `releaseDate`: ISO 8601 format (YYYY-MM-DD)
+- `order`: Positive integer, determines display sequence
+
+**Relationships**:
+- Displayed in Music section (`MusicSection.tsx`)
+- Artwork paths reference images in `/public/images/music/`
+
+---
+
+### 3. Gallery Image
+
+**File**: `src/data/gallery.json` (array of gallery images)
+
+**Purpose**: Photo gallery content with captions
+
+**Attributes**:
+- `id` (string, required): Unique identifier (e.g., "concert-royal-albert")
+- `src` (string, required): Path to image (relative to `/public/images/`)
+- `alt` (string, required): Accessible alt text (WCAG requirement)
+- `caption` (string, optional): Visible caption displayed below image
+- `category` (string, optional): "performance" | "studio" | "press" | "candid"
+- `date` (string, optional): ISO 8601 date (YYYY-MM-DD)
+- `order` (number, required): Display order (ascending)
+- `blurDataURL` (string, optional): Base64 blur placeholder (generated by build script)
+
+**Example**:
+```json
+[
+  {
+    "id": "concert-royal-albert",
+    "src": "/images/gallery/royal-albert-2025.jpg",
+    "alt": "Performing at Royal Albert Hall in red evening gown under spotlight, audience visible in background",
+    "caption": "Royal Albert Hall, London - 2025 World Tour",
+    "category": "performance",
+    "date": "2025-09-15",
+    "order": 1,
+    "blurDataURL": "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+  },
+  {
+    "id": "studio-abbey-road",
+    "src": "/images/gallery/recording-session.jpg",
+    "alt": "Recording vocals in studio booth wearing headphones, microphone in foreground",
+    "caption": "Recording Midnight Dreams at Abbey Road Studios",
+    "category": "studio",
+    "date": "2025-03-10",
+    "order": 2,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDAAYE..."
+  },
+  {
+    "id": "press-vogue",
+    "src": "/images/gallery/vogue-photoshoot.jpg",
+    "alt": "Professional headshot in black evening dress against white background",
+    "caption": "Vogue Magazine Feature - March 2026",
+    "category": "press",
+    "date": "2026-01-20",
+    "order": 3,
+    "blurDataURL": "data:image/jpeg;base64,/9j/4AAQSkZJ..."
+  }
+]
+```
+
+**Validation Rules**:
+- `id`: Unique, kebab-case, 3-50 characters
+- `src`: Valid path to existing image file
+- `alt`: 10-200 characters, descriptive (WCAG requirement)
+- `caption`: 0-150 characters
+- `category`: One of predefined categories or null
+- `date`: ISO 8601 format (YYYY-MM-DD)
+- `order`: Positive integer, determines display sequence
+- `blurDataURL`: Valid data URI with base64-encoded JPEG
+
+**Relationships**:
+- Displayed in Gallery section (`GallerySection.tsx`)
+- Images optimized by Next.js Image component
+- Blur placeholders generated by build script (`scripts/generate-blur-data.js`)
+
+---
+
+### 4. Event
+
+**File**: `src/data/events.json` (array of events)
+
+**Purpose**: Tour dates and concert listings
+
+**Attributes**:
+- `id` (string, required): Unique identifier (e.g., "carnegie-2026-02")
+- `title` (string, required): Event/venue name
+- `venue` (string, required): Venue name
+- `city` (string, required): City name
+- `state` (string, optional): State/province code (e.g., "NY", "CA")
+- `country` (string, required): Country code (ISO 3166-1 alpha-2, e.g., "US", "UK")
+- `date` (string, required): ISO 8601 date (YYYY-MM-DD)
+- `time` (string, optional): Performance time in 24h format (HH:MM)
+- `ticketUrl` (string, optional): Link to ticket purchase page
+- `ticketVendor` (string, optional): Vendor name (e.g., "Ticketmaster", "Eventbrite")
+- `status` (enum, required): "upcoming" | "soldOut" | "cancelled" | "past"
+- `order` (number, required): Display order (ascending by date recommended)
+
+**Example**:
+```json
+[
+  {
+    "id": "carnegie-2026-02",
+    "title": "Concert at Carnegie Hall",
+    "venue": "Carnegie Hall",
+    "city": "New York",
+    "state": "NY",
+    "country": "US",
+    "date": "2026-02-20",
+    "time": "20:00",
+    "ticketUrl": "https://www.ticketmaster.com/event/...",
+    "ticketVendor": "Ticketmaster",
+    "status": "upcoming",
+    "order": 1
+  },
+  {
+    "id": "festival-austin-2026",
+    "title": "Summer Music Festival",
+    "venue": "Austin City Limits",
+    "city": "Austin",
+    "state": "TX",
+    "country": "US",
+    "date": "2026-03-10",
+    "time": "18:00",
+    "ticketUrl": "https://www.aclfestival.com/tickets",
+    "ticketVendor": "Festival Box Office",
+    "status": "upcoming",
+    "order": 2
+  },
+  {
+    "id": "blue-note-sold-out",
+    "title": "Intimate Jazz Night",
+    "venue": "Blue Note Jazz Club",
+    "city": "New York",
+    "state": "NY",
+    "country": "US",
+    "date": "2026-01-15",
+    "time": "21:00",
+    "ticketUrl": null,
+    "ticketVendor": null,
+    "status": "soldOut",
+    "order": 3
+  }
+]
+```
+
+**Validation Rules**:
+- `id`: Unique, kebab-case, 3-50 characters
+- `title`: 5-100 characters
+- `venue`: 3-100 characters
+- `city`: 2-50 characters
+- `country`: ISO 3166-1 alpha-2 code
+- `date`: ISO 8601 format (YYYY-MM-DD)
+- `time`: 24-hour format (HH:MM)
+- `ticketUrl`: Valid URL or null
+- `status`: Must be one of four predefined statuses
+- `order`: Positive integer
+
+**State Transitions**:
+- `upcoming` → `soldOut` (when tickets sell out)
+- `upcoming` → `cancelled` (if event cancelled)
+- `upcoming` → `past` (automatically after event date)
+- `soldOut` → `past` (automatically after event date)
+
+**Business Rules**:
+- Events with `status: "past"` can be filtered out or moved to separate section
+- Events with `status: "soldOut"` display "Sold Out" instead of ticket button
+- Events with `status: "cancelled"` display cancellation notice
+- Events sorted by `date` ascending (soonest first)
+
+**Relationships**:
+- Displayed in Events section (`EventsSection.tsx`)
+- Ticket URLs open in new tab with `rel="noopener noreferrer"`
+
+---
+
+### 5. Social Media Link
+
+**File**: `src/data/social.json` (array of social links)
+
+**Purpose**: Social media platform connections
+
+**Attributes**:
+- `id` (string, required): Unique identifier (e.g., "instagram")
+- `platform` (enum, required): "instagram" | "twitter" | "facebook" | "youtube" | "tiktok" | "spotify" | "appleMusic"
+- `label` (string, required): Display name (e.g., "Instagram", "Follow on Twitter")
+- `url` (string, required): Full profile URL
+- `icon` (string, optional): Icon identifier for icon library (e.g., "instagram" for lucide-react)
+- `order` (number, required): Display order (ascending)
+
+**Example**:
+```json
+[
+  {
+    "id": "instagram",
+    "platform": "instagram",
+    "label": "Instagram",
+    "url": "https://instagram.com/sarahjohnsonmusic",
+    "icon": "instagram",
+    "order": 1
+  },
+  {
+    "id": "twitter",
+    "platform": "twitter",
+    "label": "Twitter",
+    "url": "https://twitter.com/sarahjmusic",
+    "icon": "twitter",
+    "order": 2
+  },
+  {
+    "id": "facebook",
+    "platform": "facebook",
+    "label": "Facebook",
+    "url": "https://facebook.com/sarahjohnsonofficial",
+    "icon": "facebook",
+    "order": 3
+  },
+  {
+    "id": "youtube",
+    "platform": "youtube",
+    "label": "YouTube",
+    "url": "https://youtube.com/@sarahjohnsonmusic",
+    "icon": "youtube",
+    "order": 4
+  },
+  {
+    "id": "spotify-profile",
+    "platform": "spotify",
+    "label": "Spotify",
+    "url": "https://open.spotify.com/artist/...",
+    "icon": "spotify",
+    "order": 5
+  }
+]
+```
+
+**Validation Rules**:
+- `id`: Unique, kebab-case, 3-30 characters
+- `platform`: Must be one of predefined platforms
+- `label`: 3-50 characters
+- `url`: Valid URL with https protocol
+- `icon`: Valid icon name from chosen icon library
+- `order`: Positive integer
+
+**Relationships**:
+- Displayed in Footer (`Footer.tsx`) and optionally in Header
+- Icons rendered from icon library (lucide-react recommended)
+- Links open in new tab with `rel="noopener noreferrer"`
+
+---
+
+## Content Loading Pattern
+
+### Static Data Loading (Build Time)
+
+```typescript
+// lib/content.ts
+import profile from '@/data/profile.json';
+import music from '@/data/music.json';
+import gallery from '@/data/gallery.json';
+import events from '@/data/events.json';
+import social from '@/data/social.json';
+
+export const getProfile = () => profile;
+
+export const getMusic = () => music.sort((a, b) => a.order - b.order);
+
+export const getGallery = (category?: string) => {
+  let images = gallery.sort((a, b) => a.order - b.order);
+  if (category) {
+    images = images.filter(img => img.category === category);
+  }
+  return images;
+};
+
+export const getUpcomingEvents = () => {
+  const now = new Date().toISOString().split('T')[0];
+  return events
+    .filter(event => event.date >= now && event.status === 'upcoming')
+    .sort((a, b) => a.date.localeCompare(b.date));
+};
+
+export const getPastEvents = () => {
+  const now = new Date().toISOString().split('T')[0];
+  return events
+    .filter(event => event.date < now || event.status === 'past')
+    .sort((a, b) => b.date.localeCompare(a.date)); // Reverse chronological
+};
+
+export const getSocialLinks = () => social.sort((a, b) => a.order - b.order);
+```
+
+### Usage in Components
+
+```typescript
+// app/page.tsx
+import { getProfile, getMusic, getGallery, getUpcomingEvents, getSocialLinks } from '@/lib/content';
+
+export default function HomePage() {
+  const profile = getProfile();
+  const music = getMusic();
+  const gallery = getGallery();
+  const events = getUpcomingEvents();
+  const socialLinks = getSocialLinks();
+
+  return (
+    <>
+      <HeroSection profile={profile} />
+      <AboutSection profile={profile} />
+      <MusicSection items={music} />
+      <GallerySection images={gallery} />
+      <EventsSection events={events} />
+      <Footer socialLinks={socialLinks} profile={profile} />
+    </>
+  );
+}
+```
+
+---
+
+## File Structure Summary
+
+```
+src/data/
+├── profile.json          # Singer profile (1 object)
+├── music.json            # Media items (array)
+├── gallery.json          # Gallery images (array)
+├── events.json           # Tour dates (array)
+└── social.json           # Social links (array)
+
+public/images/
+├── hero/                 # Hero images (1-2 files)
+├── about/                # Profile photos (1-2 files)
+├── music/                # Album art, thumbnails
+└── gallery/              # Gallery photos (20+ files)
+```
+
+---
+
+## TypeScript Interfaces
+
+```typescript
+// lib/types.ts
+export interface Profile {
+  name: string;
+  tagline: string;
+  biography: string;
+  heroImage: string;
+  profileImage?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface MediaItem {
+  id: string;
+  type: 'spotify' | 'youtube' | 'appleMusic' | 'audio';
+  title: string;
+  description?: string;
+  url: string;
+  embedUrl?: string;
+  releaseDate?: string;
+  artwork?: string;
+  order: number;
+}
+
+export interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+  caption?: string;
+  category?: 'performance' | 'studio' | 'press' | 'candid';
+  date?: string;
+  order: number;
+  blurDataURL?: string;
+}
+
+export interface Event {
+  id: string;
+  title: string;
+  venue: string;
+  city: string;
+  state?: string;
+  country: string;
+  date: string;
+  time?: string;
+  ticketUrl?: string;
+  ticketVendor?: string;
+  status: 'upcoming' | 'soldOut' | 'cancelled' | 'past';
+  order: number;
+}
+
+export interface SocialLink {
+  id: string;
+  platform: 'instagram' | 'twitter' | 'facebook' | 'youtube' | 'tiktok' | 'spotify' | 'appleMusic';
+  label: string;
+  url: string;
+  icon?: string;
+  order: number;
+}
+```
+
+---
+
+## Content Update Workflow
+
+1. **Add/Edit Content**: Update JSON files in `src/data/`
+2. **Add Images**: Place optimized images in `/public/images/`
+3. **Generate Blur Placeholders**: Run `npm run generate-blur` (updates gallery.json)
+4. **Validate**: TypeScript will catch schema violations at build time
+5. **Build**: Run `npm run build` to verify static generation
+6. **Deploy**: Push to repository, triggers automatic deployment
+
+**Note**: No CMS backend - all content updates require code changes and redeployment (as documented in spec assumptions).
