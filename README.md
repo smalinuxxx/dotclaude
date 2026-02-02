@@ -1,2 +1,4 @@
 - [ ] spec-kit
+- [ ] Its OK to let LLM work and at the end reject all and start fresh again.
+- [ ] [[YOLO]]
 - [ ] 
