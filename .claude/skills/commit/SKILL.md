@@ -1,0 +1,24 @@
+---
+name: commit
+description: Comprehensive git operations including commits, branches, merging, rebasing, history inspection, and conflict resolution.
+argument-hint: [operation] [args...]
+allowed-tools: Bash(git *), Bash(gh *)
+context: fork
+agent: git-expert
+---
+
+[user]
+	name = Sohaib Mohamed
+	email = sohaib.amhmd@gmail.com
+
+## Always Do
+- Your primary method for interacting with GitHub should be the GitHub CLI.
+- Commit prefix lowercase: `doc:`, `feat:`, `fix:`, `refactor:`, `test:`
+- Include original user prompt in commit message body
+- Save prompts to `prompt` file in project root
+- **ALWAYS append original user prompt to `prompt` file** (verbatim, with separator)
+- **ALWAYS include full user prompt in commit body** under "User Prompt:" section
+- Use project name or script name as git prefix for commits
+- Git Commit the plan and all implmentation phases together when is possible
+use git commit --amend
+- Don't forget to add .gitignore whenever needed
